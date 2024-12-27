@@ -14,7 +14,7 @@
   pname = "claude-desktop";
   version = "0.7.7";
   srcExe = fetchurl {
-    url = "https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-x64/Claude-Setup-x64.exe";
+    url = "https://storage.googleapis.com/download/storage/v1/b/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/o/nest-win-x64%2FClaude-Setup-x64.exe?generation=1734634165702331&alt=media";
     hash = "sha256-kzuvh0wl/saZlBHnpL0/EZItjsPpiX4kYrsd89A1sQo=";
   };
 in
