@@ -11,10 +11,29 @@
   makeWrapper,
   patchy-cnb,
 }: let
+  ensureGeneration = { bucketName, objectName, currentGeneration }:
+    let
+      objectInfo = builtins.fromJSON (builtins.readFile (builtins.fetchurl {
+        url = "https://storage.googleapis.com/storage/v1/b/${bucketName}/o/${objectName}";
+        name = "info.json";
+      }));
+      objectGeneration = objectInfo.generation;
+      timeCreated = objectInfo.timeCreated;
+    in
+      if objectGeneration == currentGeneration then
+        currentGeneration
+      else
+        builtins.trace "[1;31mNew ${objectName} generation found: ${objectGeneration} (created ${timeCreated})[0m" currentGeneration;
+  bucketName = "osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97";
+  objectName = "nest-win-x64%2fClaude-Setup-x64.exe";
+  currentGeneration = "1734634165702331";
+
+  generation = ensureGeneration { inherit bucketName objectName currentGeneration; };
+
   pname = "claude-desktop";
   version = "0.7.7";
   srcExe = fetchurl {
-    url = "https://storage.googleapis.com/download/storage/v1/b/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/o/nest-win-x64%2FClaude-Setup-x64.exe?generation=1734634165702331&alt=media";
+    url = "https://storage.googleapis.com/download/storage/v1/b/${bucketName}/o/${objectName}?generation=${generation}&alt=media";
     hash = "sha256-kzuvh0wl/saZlBHnpL0/EZItjsPpiX4kYrsd89A1sQo=";
   };
 in
