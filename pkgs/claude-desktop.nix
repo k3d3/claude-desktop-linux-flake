@@ -26,15 +26,15 @@
         builtins.trace "[1;31mNew ${objectName} generation found: ${objectGeneration} (created ${timeCreated})[0m" currentGeneration;
   bucketName = "osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97";
   objectName = "nest-win-x64%2fClaude-Setup-x64.exe";
-  currentGeneration = "1734634165702331";
+  currentGeneration = "1736347746447694";
 
   generation = ensureGeneration { inherit bucketName objectName currentGeneration; };
 
   pname = "claude-desktop";
-  version = "0.7.7";
+  version = "0.7.8";
   srcExe = fetchurl {
     url = "https://storage.googleapis.com/download/storage/v1/b/${bucketName}/o/${objectName}?generation=${generation}&alt=media";
-    hash = "sha256-kzuvh0wl/saZlBHnpL0/EZItjsPpiX4kYrsd89A1sQo=";
+    hash = "sha256-SOO1FkAfcOP50Z4YPyrrpSIi322gQdy9vk0CKdYjMwA=";
   };
 in
   stdenvNoCC.mkDerivation rec {
