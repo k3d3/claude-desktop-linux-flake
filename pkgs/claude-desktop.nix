@@ -10,31 +10,35 @@
   makeDesktopItem,
   makeWrapper,
   patchy-cnb,
+  version ? "0.7.8", # Can use "latest" if you're using `--impure`
 }: let
-  ensureGeneration = { bucketName, objectName, currentGeneration }:
-    let
-      objectInfo = builtins.fromJSON (builtins.readFile (builtins.fetchurl {
-        url = "https://storage.googleapis.com/storage/v1/b/${bucketName}/o/${objectName}";
-        name = "info.json";
-      }));
-      objectGeneration = objectInfo.generation;
-      timeCreated = objectInfo.timeCreated;
-    in
-      if objectGeneration == currentGeneration then
-        currentGeneration
-      else
-        builtins.trace "[1;31mNew ${objectName} generation found: ${objectGeneration} (created ${timeCreated})[0m" currentGeneration;
   bucketName = "osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97";
   objectName = "nest-win-x64%2fClaude-Setup-x64.exe";
-  currentGeneration = "1736347746447694";
 
-  generation = ensureGeneration { inherit bucketName objectName currentGeneration; };
+  versions = {
+    latest = builtins.fromJSON (builtins.readFile (builtins.fetchurl {
+      url = "https://storage.googleapis.com/storage/v1/b/${bucketName}/o/${objectName}";
+      name = "info.json";
+    }));
+    "0.7.8" = {
+      generation = "1736347746447694";
+      md5Hash = "0hi+BaQq0gkG99Te8IRMdw==";
+    };
+    "0.7.7" = {
+      generation = "1734634165702331";
+      md5Hash = "w/gyP91dwnH9+eTL1OtBAg==";
+    };
+  };
+
+  generation = versions.${version}.generation;
+  md5Hash = versions.${version}.md5Hash;
 
   pname = "claude-desktop";
-  version = "0.7.8";
-  srcExe = fetchurl {
+  srcExeGz = fetchurl {
+    name = "${pname}-${version}.exe.gz";
     url = "https://storage.googleapis.com/download/storage/v1/b/${bucketName}/o/${objectName}?generation=${generation}&alt=media";
-    hash = "sha256-SOO1FkAfcOP50Z4YPyrrpSIi322gQdy9vk0CKdYjMwA=";
+    hash = "md5-${md5Hash}";
+    curlOptsList = ["-H" "Accept-Encoding: gzip"]; # To prevent gunzipper transformer and match md5hash from the info
   };
 in
   stdenvNoCC.mkDerivation rec {
@@ -72,9 +76,10 @@ in
       mkdir -p $TMPDIR/build
       cd $TMPDIR/build
 
-      # Extract installer exe, and nupkg within it
-      7z x -y ${srcExe}
-      7z x -y "AnthropicClaude-${version}-full.nupkg"
+      # Extract gzip, installer exe, and nupkg within it
+      gunzip --stdout ${srcExeGz} > ${pname}-${version}.exe
+      7z x -y ${pname}-${version}.exe
+      7z x -y "AnthropicClaude-*-full.nupkg"
 
       # Package the icons from claude.exe
       wrestool -x -t 14 lib/net45/claude.exe -o claude.ico
