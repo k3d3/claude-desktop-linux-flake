@@ -41,6 +41,11 @@ And then the following package to your `environment.systemPackages` or `home.pac
 inputs.claude-desktop.packages.${system}.claude-desktop
 ```
 
+If you would like to run [MCP servers with Claude Desktop](https://modelcontextprotocol.io/quickstart/user) on NixOS, use the `claude-desktop-with-fhs` package. This will allow running MCP servers with calls to `npx`, `uvx`, or `docker` (assuming docker is installed).
+```nix
+inputs.claude-desktop.packages.${system}.claude-desktop-with-fhs
+```
+
 ## Other distributions
 
 This repository only provides a Nix flake, and does not provide a package for e.g. Ubuntu, Fedora, or Arch Linux.
