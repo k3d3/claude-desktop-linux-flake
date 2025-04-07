@@ -13,7 +13,7 @@
   system,
 }: let
   pname = "claude-desktop";
-  version = "0.9.2";
+  version = "0.9.1";
   srcExe = if (system == "x86_64-linux" )
            then
              fetchurl {
