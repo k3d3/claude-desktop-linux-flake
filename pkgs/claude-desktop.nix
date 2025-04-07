@@ -20,15 +20,16 @@
                # NOTE: `?v=0.9.0` doesn't actually request a specific version. It's only being used here as a cache buster.
                url = "https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-x64/Claude-Setup-x64.exe?v=0.9.1";
                hash = "sha256-6o7IUPKLO4vKYCnb82B7rgfdfpQiQy6JLTiKj0appIw=";
-             };
-           elif (system == "aarch64-linux")
-             fetchurl {
-               # NOTE: `?v=0.9.0` doesn't actually request a specific version. It's only being used here as a cache buster.
-               url = "https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-arm64/Claude-Setup-arm64.exe?v=0.9.1";
-               hash = "sha256-4gk5i7x+qZ8JmXjJwz5r1h4l2F7Q6GxKXk3nq5g5g5A=";
-             };
+             }
            else
-             throw "Unsupported system: ${system}";
+             if (system == "aarch64-linux")
+             then  fetchurl {
+                 # NOTE: `?v=0.9.0` doesn't actually request a specific version. It's only being used here as a cache buster.
+                 url = "https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-arm64/Claude-Setup-arm64.exe?v=0.9.1";
+                 hash = "sha256-B49j7QDG0ZoFr5YZXeRHWIxLrEtMBCE0RwhYWNl6bhY=";
+               }
+             else
+               throw "Unsupported system: ${system}";
     
 in
   stdenvNoCC.mkDerivation rec {
