@@ -13,19 +13,19 @@
   system,
 }: let
   pname = "claude-desktop";
-  version = "0.9.1";
+  version = "0.9.2";
   srcExe = if (system == "x86_64-linux" )
            then
              fetchurl {
                # NOTE: `?v=0.9.0` doesn't actually request a specific version. It's only being used here as a cache buster.
-               url = "https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-x64/Claude-Setup-x64.exe?v=0.9.1";
-               hash = "sha256-6o7IUPKLO4vKYCnb82B7rgfdfpQiQy6JLTiKj0appIw=";
+               url = "https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-x64/Claude-Setup-x64.exe?v=0.9.2";
+               hash = "sha256-7ESPVJHsb2ytseXKPp5fvM/nIaTDNXP2QUUugo6lwqc=";
              }
            else
              if (system == "aarch64-linux")
              then  fetchurl {
                  # NOTE: `?v=0.9.0` doesn't actually request a specific version. It's only being used here as a cache buster.
-                 url = "https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-arm64/Claude-Setup-arm64.exe?v=0.9.1";
+                 url = "https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-arm64/Claude-Setup-arm64.exe?v=0.9.2";
                  hash = "sha256-B49j7QDG0ZoFr5YZXeRHWIxLrEtMBCE0RwhYWNl6bhY=";
                }
              else
