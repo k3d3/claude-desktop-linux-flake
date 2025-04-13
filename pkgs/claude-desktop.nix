@@ -26,7 +26,7 @@
              then  fetchurl {
                  # NOTE: `?v=0.9.0` doesn't actually request a specific version. It's only being used here as a cache buster.
                  url = "https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-arm64/Claude-Setup-arm64.exe?v=0.9.2";
-                 hash = "sha256-B49j7QDG0ZoFr5YZXeRHWIxLrEtMBCE0RwhYWNl6bhY=";
+                 hash = "sha256-1b+LViY8QvqScqwa7WOYLNWCRmSRnFyF0f0q0bDhh0g=";
                }
              else
                throw "Unsupported system: ${system}";
