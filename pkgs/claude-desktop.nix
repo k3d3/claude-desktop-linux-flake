@@ -10,14 +10,27 @@
   makeDesktopItem,
   makeWrapper,
   patchy-cnb,
+  system,
 }: let
   pname = "claude-desktop";
   version = "0.9.2";
-  srcExe = fetchurl {
-    # NOTE: `?v=0.9.0` doesn't actually request a specific version. It's only being used here as a cache buster.
-    url = "https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-x64/Claude-Setup-x64.exe?v=0.9.2";
-    hash = "sha256-7ESPVJHsb2ytseXKPp5fvM/nIaTDNXP2QUUugo6lwqc=";
-  };
+  srcExe = if (system == "x86_64-linux" )
+           then
+             fetchurl {
+               # NOTE: `?v=0.9.0` doesn't actually request a specific version. It's only being used here as a cache buster.
+               url = "https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-x64/Claude-Setup-x64.exe?v=0.9.2";
+               hash = "sha256-7ESPVJHsb2ytseXKPp5fvM/nIaTDNXP2QUUugo6lwqc=";
+             }
+           else
+             if (system == "aarch64-linux")
+             then  fetchurl {
+                 # NOTE: `?v=0.9.0` doesn't actually request a specific version. It's only being used here as a cache buster.
+                 url = "https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-arm64/Claude-Setup-arm64.exe?v=0.9.2";
+                 hash = "sha256-1b+LViY8QvqScqwa7WOYLNWCRmSRnFyF0f0q0bDhh0g=";
+               }
+             else
+               throw "Unsupported system: ${system}";
+    
 in
   stdenvNoCC.mkDerivation rec {
     inherit pname version;

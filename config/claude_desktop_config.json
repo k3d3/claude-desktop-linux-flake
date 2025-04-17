@@ -1,0 +1,12 @@
+{
+    "mcpServers": {
+        "codemcp": {
+            "command": "uvx",
+            "args": [
+                "--from",
+                "git+file:///home/faezs/library/codemcp",
+                "codemcp"
+            ]
+        }
+    }
+}
