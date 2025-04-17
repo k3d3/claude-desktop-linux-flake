@@ -29,6 +29,7 @@
           openssl
           nodejs
           uv
+          nix
         ];
         runScript = pkgs.writeScript "claude-desktop-wrapper" ''
           #!${pkgs.bash}/bin/bash
