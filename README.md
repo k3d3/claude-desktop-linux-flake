@@ -60,9 +60,8 @@ To build an AppImage for Claude Desktop on non-Nix distributions (Fedora, Ubuntu
    cd claude-desktop-linux-flake
    ```
 
-2. Run the setup and build script:
+2. Run the build script:
    ```bash
-   ./setup.sh
    ./build-appimage.sh
    ```
 
