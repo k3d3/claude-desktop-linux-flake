@@ -48,7 +48,37 @@ inputs.claude-desktop.packages.${system}.claude-desktop-with-fhs
 
 ## Other distributions
 
-This repository only provides a Nix flake, and does not provide a package for e.g. Ubuntu, Fedora, or Arch Linux.
+This repository provides a Nix flake and an AppImage build script for non-Nix distributions.
+
+### AppImage for Other Linux Distributions
+
+To build an AppImage for Claude Desktop on non-Nix distributions (Fedora, Ubuntu, Arch Linux, etc.):
+
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/k3d3/claude-desktop-linux-flake.git
+   cd claude-desktop-linux-flake
+   ```
+
+2. Run the setup and build script:
+   ```bash
+   ./setup.sh
+   ./build-appimage.sh
+   ```
+
+3. Run the AppImage:
+   ```bash
+   ./appimage-output/Claude-0.9.3-*.AppImage
+   ```
+
+The AppImage build script supports:
+- **Fedora/RHEL/CentOS** (dnf-based)
+- **Ubuntu/Debian** (apt-based)
+- **Arch Linux/Manjaro** (pacman-based)
+
+The script will automatically detect your distribution and install the necessary dependencies.
+
+**Note:** The AppImage should work on most modern Linux distributions, not just the ones explicitly listed above.
 
 Other known variants:
 - https://github.com/aaddrick/claude-desktop-debian - A debian builder for Claude Desktop
@@ -70,8 +100,8 @@ With the exception of one library.
 ![image](https://github.com/user-attachments/assets/9b386f42-2565-441a-a351-9c09347f9f5f)
 
 Node, and by extension Electron, allow you to import natively-compiled objects into the Node runtime as if they were regular modules.
-These are typically used to extend the functionality in ways Node itself can't do. Only problem, as shown above, is that these objects 
-are only compiled for one OS. 
+These are typically used to extend the functionality in ways Node itself can't do. Only problem, as shown above, is that these objects
+are only compiled for one OS.
 
 Luckily enough, because it's a loadable Node module, that means you can open it up yourself in node and inspect it - no decompilation or disassembly needed:
 
