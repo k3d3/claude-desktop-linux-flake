@@ -72,7 +72,7 @@ in
       for size in 16 24 32 48 64 256; do
         mkdir -p $TMPDIR/build/icons/hicolor/"$size"x"$size"/apps
         install -Dm 644 claude_*"$size"x"$size"x32.png \
-          $TMPDIR/build/icons/hicolor/"$size"x"$size"/apps/claude.png
+          $TMPDIR/build/icons/hicolor/"$size"x"$size"/apps/claude-desktop.png
       done
 
       rm claude.ico
