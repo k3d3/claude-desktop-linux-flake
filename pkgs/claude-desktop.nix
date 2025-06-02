@@ -10,7 +10,8 @@
   makeDesktopItem,
   makeWrapper,
   patchy-cnb,
-  perl
+  perl,
+  glib-networking
 }: let
   pname = "claude-desktop";
   version = "0.9.3";
@@ -42,9 +43,13 @@ in
       terminal = false;
       desktopName = "Claude";
       genericName = "Claude Desktop";
+      comment = "AI Assistant by Anthropic";
+      startupWMClass = "Claude";
       categories = [
         "Office"
         "Utility"
+        "Network"
+        "Chat"
       ];
       mimeTypes = ["x-scheme-handler/claude"];
     };
@@ -170,8 +175,10 @@ in
       mkdir -p $out/bin
       makeWrapper ${electron}/bin/electron $out/bin/$pname \
         --add-flags "$out/lib/$pname/app.asar" \
-        --add-flags "--openDevTools" \
-        --add-flags "\''${NIXOS_OZONE_WL:+\''${WAYLAND_DISPLAY:+--ozone-platform-hint=auto --enable-features=WaylandWindowDecorations}}"
+        --add-flags "\''${NIXOS_OZONE_WL:+\''${WAYLAND_DISPLAY:+--ozone-platform-hint=auto --enable-features=WaylandWindowDecorations,UseOzonePlatform --gtk-version=4}}" \
+        --set-default NIXOS_OZONE_WL "\''${WAYLAND_DISPLAY:+1}" \
+        --set ELECTRON_OZONE_PLATFORM_HINT "auto" \
+        --set GIO_EXTRA_MODULES "${glib-networking}/lib/gio/modules"
 
       runHook postInstall
     '';
