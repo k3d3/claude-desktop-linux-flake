@@ -38,7 +38,7 @@ in
     desktopItem = makeDesktopItem {
       name = "Claude";
       exec = "claude-desktop %u";
-      icon = "claude-desktop";
+      icon = "claude";
       type = "Application";
       terminal = false;
       desktopName = "Claude";
@@ -169,7 +169,7 @@ in
 
       # Install .desktop file
       mkdir -p $out/share/applications
-      install -Dm0644 {${desktopItem},$out}/share/applications/Claude.desktop
+      install -Dm0644 ${desktopItem}/share/applications/Claude.desktop $out/share/applications/Claude.desktop
       # Also install with original name for compatibility
       ln -s Claude.desktop $out/share/applications/claude-desktop.desktop
 
