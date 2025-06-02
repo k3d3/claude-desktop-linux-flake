@@ -29,6 +29,9 @@
             openssl
             nodejs
             uv
+            glib
+            gvfs
+            xdg-utils
           ];
           runScript = "${claude-desktop}/bin/claude-desktop";
         };

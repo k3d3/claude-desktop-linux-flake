@@ -10,7 +10,8 @@
   makeDesktopItem,
   makeWrapper,
   patchy-cnb,
-  perl
+  perl,
+  glib-networking
 }: let
   pname = "claude-desktop";
   version = "0.9.3";
@@ -35,16 +36,20 @@ in
     ];
 
     desktopItem = makeDesktopItem {
-      name = "claude-desktop";
+      name = "Claude";
       exec = "claude-desktop %u";
       icon = "claude-desktop";
       type = "Application";
       terminal = false;
       desktopName = "Claude";
       genericName = "Claude Desktop";
+      comment = "AI Assistant by Anthropic";
+      startupWMClass = "Claude";
       categories = [
         "Office"
         "Utility"
+        "Network"
+        "Chat"
       ];
       mimeTypes = ["x-scheme-handler/claude"];
     };
@@ -67,7 +72,7 @@ in
       for size in 16 24 32 48 64 256; do
         mkdir -p $TMPDIR/build/icons/hicolor/"$size"x"$size"/apps
         install -Dm 644 claude_*"$size"x"$size"x32.png \
-          $TMPDIR/build/icons/hicolor/"$size"x"$size"/apps/claude.png
+          $TMPDIR/build/icons/hicolor/"$size"x"$size"/apps/claude-desktop.png
       done
 
       rm claude.ico
@@ -164,14 +169,22 @@ in
 
       # Install .desktop file
       mkdir -p $out/share/applications
-      install -Dm0644 {${desktopItem},$out}/share/applications/$pname.desktop
+      install -Dm0644 {${desktopItem},$out}/share/applications/Claude.desktop
+      # Also install with original name for compatibility
+      ln -s Claude.desktop $out/share/applications/claude-desktop.desktop
 
       # Create wrapper
       mkdir -p $out/bin
       makeWrapper ${electron}/bin/electron $out/bin/$pname \
+        --prefix LD_LIBRARY_PATH : "${lib.makeLibraryPath [glib-networking]}" \
         --add-flags "$out/lib/$pname/app.asar" \
-        --add-flags "--openDevTools" \
-        --add-flags "\''${NIXOS_OZONE_WL:+\''${WAYLAND_DISPLAY:+--ozone-platform-hint=auto --enable-features=WaylandWindowDecorations}}"
+        --add-flags "\''${NIXOS_OZONE_WL:+\''${WAYLAND_DISPLAY:+--ozone-platform-hint=auto --enable-features=WaylandWindowDecorations,UseOzonePlatform --gtk-version=4}}" \
+        --set-default NIXOS_OZONE_WL "\''${WAYLAND_DISPLAY:+1}" \
+        --set ELECTRON_OZONE_PLATFORM_HINT "auto" \
+        --set GIO_EXTRA_MODULES "${glib-networking}/lib/gio/modules" \
+        --set GDK_BACKEND "wayland,x11" \
+        --set CHROME_DESKTOP "Claude.desktop" \
+        --prefix XDG_DATA_DIRS : "$out/share"
 
       runHook postInstall
     '';
