@@ -16,8 +16,8 @@
   pname = "claude-desktop";
   version = "0.9.4";
   srcExe = fetchurl {
-    # NOTE: `?v=0.9.0` doesn't actually request a specific version. It's only being used here as a cache buster.
-    url = "https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-x64/Claude-Setup-x64.exe?v=0.9.4";
+    # NOTE: Removing version parameter to avoid potential hash mismatches in CI/CD environments
+    url = "https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-x64/Claude-Setup-x64.exe";
     hash = "sha256-OofXsRNVBueiewCCfYOwGqlsZECYtWWRTg4Wu+hGAnE=";
   };
 in
