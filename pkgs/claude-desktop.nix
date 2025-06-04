@@ -16,10 +16,9 @@
   pname = "claude-desktop";
   version = "0.9.4";
   srcExe = fetchurl {
-    # NOTE: Using Archive.org snapshot for stable hash across environments
-    # Original URL returns different files based on location/time
-    url = "https://web.archive.org/web/20241126193749/https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-x64/Claude-Setup-x64.exe";
-    sha256 = "1693agiycq463i701bz3a1mq5gsd8lhvqma75n0lyfhq3mry27v0";
+    # Direct URL to get the latest version
+    url = "https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-x64/Claude-Setup-x64.exe";
+    sha256 = "sha256-OofXsRNVBueiewCCfYOwGqlsZECYtWWRTg4Wu+hGAnE=";
   };
 in
   stdenvNoCC.mkDerivation rec {
