@@ -39,7 +39,7 @@ in
     desktopItem = makeDesktopItem {
       name = "Claude";
       exec = "claude-desktop %u";
-      icon = "claude-desktop";
+      icon = "claude";
       type = "Application";
       terminal = false;
       desktopName = "Claude";
@@ -178,9 +178,6 @@ in
       # Install icons
       mkdir -p $out/share/icons
       cp -r $TMPDIR/build/icons/* $out/share/icons
-      
-      # Also create claude-desktop named icons for desktop file compatibility
-      find $out/share/icons -name "claude.png" -exec bash -c 'cp "$1" "''${1%/*}/claude-desktop.png"' _ {} \;
 
       # Install .desktop file
       mkdir -p $out/share/applications
