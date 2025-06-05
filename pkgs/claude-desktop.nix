@@ -9,12 +9,13 @@
   imagemagick,
   makeDesktopItem,
   makeWrapper,
+  wrapGAppsHook3,
   patchy-cnb,
   perl,
   glib-networking
 }: let
   pname = "claude-desktop";
-  version = "0.9.4";
+  version = "0.9.3";
   srcExe = fetchurl {
     # Direct URL to get the latest version
     url = "https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-x64/Claude-Setup-x64.exe";
@@ -38,13 +39,14 @@ in
     desktopItem = makeDesktopItem {
       name = "Claude";
       exec = "claude-desktop %u";
-      icon = "claude";
+      icon = "claude-desktop";
       type = "Application";
       terminal = false;
       desktopName = "Claude";
       genericName = "Claude Desktop";
       comment = "AI Assistant by Anthropic";
       startupWMClass = "Claude";
+      startupNotify = true;
       categories = [
         "Office"
         "Utility"
@@ -63,7 +65,17 @@ in
 
       # Extract installer exe, and nupkg within it
       7z x -y ${srcExe}
-      7z x -y "AnthropicClaude-${version}-full.nupkg"
+      # List files to see what was extracted
+      echo "Files extracted from installer:"
+      ls -la *.nupkg || true
+      # Try to find the correct nupkg file
+      NUPKG_FILE=$(find . -maxdepth 1 -name "AnthropicClaude-*-full.nupkg" | head -1)
+      if [ -z "$NUPKG_FILE" ]; then
+        echo "ERROR: No nupkg file found!"
+        exit 1
+      fi
+      echo "Found nupkg file: $NUPKG_FILE"
+      7z x -y "$NUPKG_FILE"
 
       # Package the icons from claude.exe
       wrestool -x -t 14 lib/net45/claude.exe -o claude.ico
@@ -166,10 +178,13 @@ in
       # Install icons
       mkdir -p $out/share/icons
       cp -r $TMPDIR/build/icons/* $out/share/icons
+      
+      # Also create claude-desktop named icons for desktop file compatibility
+      find $out/share/icons -name "claude.png" -exec bash -c 'cp "$1" "''${1%/*}/claude-desktop.png"' _ {} \;
 
       # Install .desktop file
       mkdir -p $out/share/applications
-      install -Dm0644 ${desktopItem}/share/applications/Claude.desktop $out/share/applications/Claude.desktop
+      install -Dm0644 {${desktopItem},$out}/share/applications/Claude.desktop
       # Also install with original name for compatibility
       ln -s Claude.desktop $out/share/applications/claude-desktop.desktop
 
