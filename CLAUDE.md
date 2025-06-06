@@ -46,3 +46,7 @@ Key files:
 - `/flake.nix`: Nix flake configuration
 
 When updating for new Claude Desktop versions, modify the version and hash in `/pkgs/claude-desktop.nix`.
+
+## Memories
+
+- The location for my NixOS configuration is at `/home/tom/.nixos`. It's entry point is `/home/tom/.nixos/flake.nix`.
