@@ -13,11 +13,11 @@
   perl
 }: let
   pname = "claude-desktop";
-  version = "0.10.38";
+  version = "0.11.4";
   srcExe = fetchurl {
     # NOTE: `?v=0.10.0` doesn't actually request a specific version. It's only being used here as a cache buster.
-    url = "https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-x64/Claude-Setup-x64.exe?v=0.10.38";
-    hash = "sha256-RRXa1PCHBOMdSKcCFr4rmqzWBiA/ezSuz+mWhc0zbkE=";
+    url = "https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-x64/Claude-Setup-x64.exe?v=0.11.4";
+    hash = "sha256-7zz2JWI0Ozi976XaSSALcyEKPbIAHUSpGIgRkZvWf5U=";
   };
 in
   stdenvNoCC.mkDerivation rec {
@@ -57,6 +57,7 @@ in
       cd $TMPDIR/build
 
       # Extract installer exe, and nupkg within it
+      7z l ${srcExe}
       7z x -y ${srcExe}
       7z x -y "AnthropicClaude-${version}-full.nupkg"
 
