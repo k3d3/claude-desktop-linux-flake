@@ -37,7 +37,7 @@ in
     desktopItem = makeDesktopItem {
       name = "claude-desktop";
       exec = "claude-desktop %u";
-      icon = "claude-desktop";
+      icon = "claude";
       type = "Application";
       terminal = false;
       desktopName = "Claude";
