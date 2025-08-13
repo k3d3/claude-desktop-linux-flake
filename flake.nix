@@ -53,6 +53,11 @@
             # Copy icons from the original package to maintain icon theme integration
             cp -r ${basePackage}/share/icons/* $out/share/icons/
             
+            # Copy and modify desktop file from base package
+            cp ${basePackage}/share/applications/claude-desktop.desktop $out/share/applications/claude-desktop.desktop
+            # Update the Exec path to point to our FHS wrapper
+            sed -i 's|Exec=claude-desktop|Exec=${placeholder "out"}/bin/claude-desktop|g' $out/share/applications/claude-desktop.desktop
+            
             # Create wrapper script that preserves all arguments and environment
             cat > $out/bin/claude-desktop << 'EOF'
             #!/usr/bin/env bash
@@ -60,22 +65,6 @@
             exec ${fhsEnv}/bin/claude-desktop "$@"
             EOF
             chmod +x $out/bin/claude-desktop
-            
-            # Create desktop file
-            cat > $out/share/applications/claude-desktop.desktop << 'EOF'
-            [Desktop Entry]
-            Name=Claude
-            GenericName=Claude Desktop with MCP Support
-            Comment=AI assistant with Model Context Protocol support
-            Exec=${placeholder "out"}/bin/claude-desktop %u
-            Icon=claude
-            Type=Application
-            Terminal=false
-            Categories=Office;Utility;Development;
-            MimeType=x-scheme-handler/claude;
-            StartupWMClass=Claude
-            Keywords=AI;Assistant;Chat;Claude;MCP;
-            EOF
             
             runHook postInstall
           '';
@@ -85,15 +74,7 @@
             originalPackage = basePackage;
           };
           
-          meta = basePackage.meta // {
-            description = "Claude Desktop for Linux with FHS environment for MCP server support";
-            longDescription = ''
-              Claude Desktop wrapped in an FHS environment to provide compatibility
-              with Model Context Protocol (MCP) servers that require standard filesystem
-              hierarchy and common development tools.
-            '';
-            mainProgram = "claude-desktop";
-          };
+          meta = basePackage.meta;
         };
         default = claude-desktop;
       };
