@@ -18,12 +18,11 @@
     in {
       packages = rec {
         patchy-cnb = pkgs.callPackage ./pkgs/patchy-cnb.nix {};
-        claude-desktop-base = pkgs.callPackage ./pkgs/claude-desktop.nix {
+        claude-desktop = pkgs.callPackage ./pkgs/claude-desktop.nix {
           inherit patchy-cnb;
         };
-        claude-desktop = claude-desktop-base;
         claude-desktop-with-fhs = let
-          basePackage = self.packages.${system}.claude-desktop-base;
+          basePackage = self.packages.${system}.claude-desktop;
           fhsEnv = pkgs.buildFHSEnv {
             name = "claude-desktop";
             targetPkgs = pkgs: [
