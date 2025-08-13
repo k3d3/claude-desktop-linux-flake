@@ -21,7 +21,8 @@
         claude-desktop-base = pkgs.callPackage ./pkgs/claude-desktop.nix {
           inherit patchy-cnb;
         };
-        claude-desktop = let
+        claude-desktop = claude-desktop-base;
+        claude-desktop-fhs = let
           basePackage = self.packages.${system}.claude-desktop-base;
           fhsEnv = pkgs.buildFHSEnv {
             name = "claude-desktop";
