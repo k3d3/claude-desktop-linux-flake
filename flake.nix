@@ -22,7 +22,7 @@
           inherit patchy-cnb;
         };
         claude-desktop = claude-desktop-base;
-        claude-desktop-fhs = let
+        claude-desktop-with-fhs = let
           basePackage = self.packages.${system}.claude-desktop-base;
           fhsEnv = pkgs.buildFHSEnv {
             name = "claude-desktop";
