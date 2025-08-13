@@ -18,13 +18,13 @@
     in {
       packages = rec {
         patchy-cnb = pkgs.callPackage ./pkgs/patchy-cnb.nix {};
-        claude-desktop = pkgs.callPackage ./pkgs/claude-desktop.nix {
+        claude-desktop-base = pkgs.callPackage ./pkgs/claude-desktop.nix {
           inherit patchy-cnb;
         };
-        claude-desktop-with-fhs = let
-          basePackage = self.packages.${system}.claude-desktop;
+        claude-desktop = let
+          basePackage = self.packages.${system}.claude-desktop-base;
           fhsEnv = pkgs.buildFHSEnv {
-            name = "claude-desktop-fhs";
+            name = "claude-desktop";
             targetPkgs = pkgs: [
               basePackage
               pkgs.docker
@@ -32,14 +32,13 @@
               pkgs.openssl
               pkgs.nodejs
               pkgs.uv
-              # Additional packages commonly needed for MCP servers
               pkgs.python3
               pkgs.git
             ];
             runScript = "${basePackage}/bin/claude-desktop";
           };
         in pkgs.stdenv.mkDerivation {
-          pname = "claude-desktop-fhs";
+          pname = "claude-desktop";
           version = basePackage.version;
           
           dontUnpack = true;
@@ -55,20 +54,20 @@
             cp -r ${basePackage}/share/icons/* $out/share/icons/
             
             # Create wrapper script that preserves all arguments and environment
-            cat > $out/bin/claude-desktop-fhs << 'EOF'
+            cat > $out/bin/claude-desktop << 'EOF'
             #!/usr/bin/env bash
             # FHS wrapper for Claude Desktop with MCP support
-            exec ${fhsEnv}/bin/claude-desktop-fhs "$@"
+            exec ${fhsEnv}/bin/claude-desktop "$@"
             EOF
-            chmod +x $out/bin/claude-desktop-fhs
+            chmod +x $out/bin/claude-desktop
             
-            # Create desktop file with proper FHS naming
-            cat > $out/share/applications/claude-desktop-fhs.desktop << 'EOF'
+            # Create desktop file
+            cat > $out/share/applications/claude-desktop.desktop << 'EOF'
             [Desktop Entry]
-            Name=Claude (FHS)
+            Name=Claude
             GenericName=Claude Desktop with MCP Support
             Comment=AI assistant with Model Context Protocol support
-            Exec=${placeholder "out"}/bin/claude-desktop-fhs %u
+            Exec=${placeholder "out"}/bin/claude-desktop %u
             Icon=claude
             Type=Application
             Terminal=false
@@ -93,7 +92,7 @@
               with Model Context Protocol (MCP) servers that require standard filesystem
               hierarchy and common development tools.
             '';
-            mainProgram = "claude-desktop-fhs";
+            mainProgram = "claude-desktop";
           };
         };
         default = claude-desktop;
