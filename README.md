@@ -33,7 +33,6 @@ Add the following to your `flake.nix`:
 ```nix
 inputs.claude-desktop.url = "github:k3d3/claude-desktop-linux-flake";
 inputs.claude-desktop.inputs.nixpkgs.follows = "nixpkgs";
-inputs.claude-desktop.inputs.flake-utils.follows = "flake-utils";
 ```
 
 And then the following package to your `environment.systemPackages` or `home.packages`:
