@@ -29,7 +29,7 @@
                 pkgs.openssl
                 pkgs.nodejs
                 pkgs.uv
-                pkgs.python3
+                (pkgs.python3.withPackages (ps: with ps; [ pip httpx ]))
                 pkgs.git
               ];
               runScript = "${basePackage}/bin/claude-desktop";
