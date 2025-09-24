@@ -49,7 +49,7 @@
                 profile = ''
                                   # UV Configuration for NixOS - prevent Python downloads
                                   export UV_PYTHON_PREFERENCE="system"
-                                  export UV_PYTHON_DOWNLOADS="false"
+                                  export UV_PYTHON_DOWNLOADS="never"
                                   export UV_SYSTEM_SITE_PACKAGES="true"
                                   export UV_LINK_MODE="copy"
 
@@ -61,7 +61,7 @@
                                     cat > "$HOME/.config/uv/uv.toml" << 'EOF'
                   # Use system Python instead of downloading
                   python-preference = "system"
-                  python-downloads = "false"
+                  python-downloads = "never"
                   system-site-packages = "true"
                   link-mode = "copy"
                   cache-dir = "~/.cache/uv"
