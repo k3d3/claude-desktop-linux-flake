@@ -61,8 +61,8 @@
                                     cat > "$HOME/.config/uv/uv.toml" << 'EOF'
                   # Use system Python instead of downloading
                   python-preference = "system"
-                  python-downloads = false
-                  system-site-packages = true
+                  python-downloads = "false"
+                  system-site-packages = "true"
                   link-mode = "copy"
                   cache-dir = "~/.cache/uv"
                   EOF
