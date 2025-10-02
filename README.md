@@ -14,11 +14,12 @@ Supports the Tray menu! (Screenshot of running on KDE)
 
 ![image](https://github.com/user-attachments/assets/ba209824-8afb-437c-a944-b53fd9ecd559)
 
-This is a Nix flake for running Claude Desktop on Linux.
+This is a 
+[Nix flake](https://nix.dev/concepts/flakes) for running Claude Desktop on Linux.
 
 # Usage
 
-To run this once, make sure Nix is installed, then run
+To run this once, make sure [Nix](https://nix.dev) is [installed](https://nix.dev/install-nix#install-nix), then run
 
 ```bash
 NIXPKGS_ALLOW_UNFREE=1 nix run github:k3d3/claude-desktop-linux-flake --impure
