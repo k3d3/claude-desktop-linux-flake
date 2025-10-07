@@ -12,17 +12,16 @@
   patchy-cnb,
   perl,
   # Allow overriding Claude executable parameters
-  claudeHash ? "sha256-ISyVjtr9vGzCqq7oaDQd6h9kC7iumyo38z9VjuVCsu4=",
-  claudeVersion ? "0.12.129",
+  claudeHash ? "sha256-U7jpTk8pU7SUHKxTomQ3BLjspUsNU2r8fEWktaviYj4=",
+  claudeVersion ? "0.13.37",
   claudeUrl ? "https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-x64/Claude-Setup-x64.exe"
 }: let
   pname = "claude-desktop";
-  version = claudeVersion;
+  version = "0.13.37";
   srcExe = fetchurl {
-    # Use the provided URL and version, or defaults
-    url = "${claudeUrl}?v=${version}";
-    # Hash can be overridden via flake input
-    hash = claudeHash;
+    # NOTE: `?v=0.10.0` doesn't actually request a specific version. It's only being used here as a cache buster.
+    url = "https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-x64/Claude-Setup-x64.exe?v=${version}";
+    hash = "sha256-U7jpTk8pU7SUHKxTomQ3BLjspUsNU2r8fEWktaviYj4=";
   };
 in
   stdenvNoCC.mkDerivation rec {
