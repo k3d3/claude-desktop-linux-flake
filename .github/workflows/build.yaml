@@ -1,0 +1,33 @@
+name: "NIXOS build flake"
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Nix cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            /nix/store
+            /nix/var/nix/db
+            /nix/var/nix/profiles
+          key: ${{ runner.os }}-nix-${{ hashFiles('vm/**/*.nix') }}
+          restore-keys: |
+            ${{ runner.os }}-nix-
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v27
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+          nix_path: nixpkgs=channel:nixos-unstable
+
+      - name: Build Flake
+        run: |
+          nix build .
