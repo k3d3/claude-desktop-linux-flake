@@ -59,7 +59,17 @@ in
 
       # Extract installer exe, and nupkg within it
       7z x -y ${srcExe}
-      7z x -y "AnthropicClaude-${version}-full.nupkg"
+            
+      # Find and extract the nupkg file (filename may vary)
+      ls -la
+      NUPKG_FILE=$(find . -name "*.nupkg" -type f | head -1)
+      if [ -z "$NUPKG_FILE" ]; then
+        echo "Error: No .nupkg file found"
+        find . -name "*Claude*" -o -name "*.nupkg" -o -name "*.zip"
+        exit 1
+      fi
+      echo "Found nupkg file: $NUPKG_FILE"
+      7z x -y "$NUPKG_FILE"
 
       # Package the icons from claude.exe
       wrestool -x -t 14 lib/net45/claude.exe -o claude.ico
