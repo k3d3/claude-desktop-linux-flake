@@ -13,9 +13,10 @@
   perl
 }: let
   pname = "claude-desktop";
-  version = "1.0.1217";
+  version = "0.14.10";
   srcExe = fetchurl {
-    # NOTE: `?v=0.10.0` doesn't actually request a specific version. It's only being used here as a cache buster.
+    # NOTE: `?v=${version}` doesn't actually request a specific version. It's only being used here as a cache buster.
+    # In the future, this should more properly query GCP storage to get a specific version.
     url = "https://storage.googleapis.com/osprey-downloads-c02f6a0d-347c-492b-a752-3e0651722e97/nest-win-x64/Claude-Setup-x64.exe?v=${version}";
     hash = "sha256-Sn/lvMlfKd7b/utFvCxrkWNDJTug4OOSA4lo9YV8aqk=";
   };
@@ -57,8 +58,13 @@ in
       mkdir -p $TMPDIR/build
       cd $TMPDIR/build
 
+
       # Extract installer exe, and nupkg within it
       7z x -y ${srcExe}
+
+      # List the directory, in case the nupkg filename changes
+      ls -al .
+
       7z x -y "AnthropicClaude-${version}-full.nupkg"
 
       # Package the icons from claude.exe
