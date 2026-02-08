@@ -6,44 +6,68 @@
     flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = {
-    self,
-    nixpkgs,
-    flake-utils,
-  }:
-    flake-utils.lib.eachSystem ["x86_64-linux" "aarch64-linux"] (system: let
-      pkgs = import nixpkgs {
-        inherit system;
-        config.allowUnfree = true;
-      };
-    in {
-      packages = rec {
-        patchy-cnb = pkgs.callPackage ./pkgs/patchy-cnb.nix {};
-        claude-desktop = pkgs.callPackage ./pkgs/claude-desktop.nix {
-          inherit patchy-cnb;
+  outputs =
+    {
+      self,
+      nixpkgs,
+      flake-utils,
+    }:
+    flake-utils.lib.eachSystem [ "x86_64-linux" "aarch64-linux" ] (
+      system:
+      let
+        pkgs = import nixpkgs {
+          inherit system;
+          config.allowUnfree = true;
         };
-        claude-desktop-with-fhs = pkgs.buildFHSEnv {
-          name = "claude-desktop";
-          targetPkgs = pkgs:
-            with pkgs; [
-              docker
-              glibc
-              openssl
-              nodejs
-              uv
-            ];
-          runScript = "${claude-desktop}/bin/claude-desktop";
-          extraInstallCommands = ''
-            # Copy desktop file from the claude-desktop package
-            mkdir -p $out/share/applications
-            cp ${claude-desktop}/share/applications/claude.desktop $out/share/applications/
+      in
+      {
+        packages = rec {
+          claude-desktop = pkgs.callPackage ./pkgs/claude-desktop.nix { };
 
-            # Copy icons
-            mkdir -p $out/share/icons
-            cp -r ${claude-desktop}/share/icons/* $out/share/icons/
-          '';
+          claude-desktop-with-fhs = pkgs.symlinkJoin {
+            name = "claude-desktop-with-fhs";
+            paths = [
+              claude-desktop
+              (pkgs.buildFHSEnv {
+                name = "claude-desktop-bwrap";
+                targetPkgs =
+                  pkgs: with pkgs; [
+                    docker
+                    glibc
+                    openssl
+                    nodejs
+                    uv
+                    glib
+                    gvfs
+                    xdg-utils
+                  ];
+                runScript = "${claude-desktop}/bin/claude-desktop";
+              })
+            ];
+            postBuild = ''
+              rm -f $out/bin/claude-desktop
+              ln -sf $out/bin/claude-desktop-bwrap $out/bin/claude-desktop
+            '';
+          };
+
+          claude-desktop-shell = pkgs.buildFHSEnv {
+            name = "claude-desktop-shell";
+            targetPkgs =
+              pkgs: with pkgs; [
+                docker
+                glibc
+                openssl
+                nodejs
+                uv
+                glib
+                gvfs
+                xdg-utils
+              ];
+            runScript = "bash";
+          };
+
+          default = claude-desktop;
         };
-        default = claude-desktop;
-      };
-    });
+      }
+    );
 }
